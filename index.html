@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BN LAST KING Prediction</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: #00ff00;
+        }
+        /* Hacker coding background (Matrix effect) */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .table-box {
+            margin: 50px auto;
+            padding: 20px;
+            border: 5px solid #00ff00; /* Neon green border */
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+            width: 80%;
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
+        }
+        .table-box h2 {
+            margin: 10px 0;
+            color: #00ff00; /* Green text */
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #00ff00; /* Neon green border */
+            font-size: 18px;
+            font-weight: bold;
+        }
+        th {
+            background-color: #00ff00;
+            color: #000;
+        }
+        td {
+            background-color: #222;
+            color: #00ff00;
+        }
+        .timer, .period {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <h1 style="text-align: center; font-weight: bold; color: #00ff00;">BN LAST KING Prediction</h1>
+    <div class="timer" id="timer30s">00 : 30</div>
+    <div class="period" id="period30s">Period: Loading...</div>
+    <div class="table-box">
+        <h2>Upcoming Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Period Number</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody id="resultTable">
+                <!-- Dynamic rows will be appended here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // JavaScript code for 30-second timer and random results
+        let timer30s = document.getElementById("timer30s");
+        let period30s = document.getElementById("period30s");
+        let resultTable = document.getElementById("resultTable");
+        
+        let resultsPattern = ["SMALL", "SMALL", "BIG", "SMALL", "SMALL", "BIG", "SMALL", "BIG"];
+        let currentResultIndex = 0;
+
+        // Java Timer implementation using JavaScript
+        setInterval(() => {
+            const now = new Date();
+            const seconds = now.getUTCSeconds();
+            const remainingSeconds = 30 - (seconds % 30);
+            const minutes = now.getUTCMinutes();
+            const totalMinutes = now.getUTCHours() * 60 + minutes;
+
+            // Update period number for 30-second interval
+            const periodNumber = `${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, "0")}${String(now.getUTCDate()).padStart(2, "0")}30${1 + totalMinutes * 2 + (seconds >= 30 ? 1 : 0)}`;
+            period30s.textContent = `Period: ${periodNumber}`;
+
+            // Update timer in "xx : xx" format
+            timer30s.textContent = `${String(remainingSeconds).padStart(2, "0")} : ${String(remainingSeconds).padStart(2, "0")}`;
+
+            // Show random result when period number changes
+            if (remainingSeconds === 30) {
+                // Fetch the next result from the pattern
+                const result = resultsPattern[currentResultIndex];
+                currentResultIndex = (currentResultIndex + 1) % resultsPattern.length;
+
+                // Add the result to the table
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${periodNumber}</td><td>${result}</td>`;
+                resultTable.prepend(row); // Add the new result to the top of the table
+            }
+        }, 1000);
+
+        // Matrix effect background
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#00ff00";
+            ctx.font = `${fontSize}px monospace`;
+
+            drops.forEach((y, i) => {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                const x = i * fontSize;
+                ctx.fillText(text, x, y * fontSize);
+
+                if (y * fontSize > canvas.height || Math.random() > 0.95) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            });
+        }
+
+        setInterval(drawMatrix, 50);
+    </script>
+</body>
+</html>
